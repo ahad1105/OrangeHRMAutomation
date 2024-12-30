@@ -33,12 +33,21 @@
     <artifactId>extentreports</artifactId>
     <version>5.1.2</version>
 	</dependency>
-	<!--maven surefire-->
-	<dependency>
-    <groupId>org.apache.maven.plugins</groupId>
-    <artifactId>maven-surefire-plugin</artifactId>
-    <version>3.5.2</version>
-	</dependency>
 	</dependencies>
+	<!--maven surefire-->
+	<build>
+  <plugins>
+    <plugin>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-surefire-plugin</artifactId>
+      <version>3.5.2</version>
+      <configuration>
+        <includes>
+          <include>**/*Test.java</include>
+        </includes>
+      </configuration>
+    </plugin>
+  </plugins>
+</build>
 	
 </project>
