@@ -1,0 +1,56 @@
+name: Automated Testing
+
+on:
+  workflow_dispatch:  # Allows manual triggering
+  schedule:
+    - cron: '30 3 * * *'
+    - cron: '30 13 * * *'
+
+jobs:
+  test:
+    runs-on: windows-latest
+
+    steps:
+      # Step 1: Checkout repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Step 2: Cache Maven dependencies
+      - name: Cache Maven dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      # Step 3: Set up Java and Maven
+      - name: Set up Java and Maven
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      # Step 4: Verify Maven and Java versions
+      - name: Verify tools
+        run: |
+          java -version
+          mvn -v
+
+      # Step 5: Install Chrome
+      - name: Set up Chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: 'latest'
+
+      # Step 6: Build and run tests
+      - name: Build and run tests
+        run: mvn clean install -Djava.version=21 -Dbrowser=chrome
+
+      # Step 7: Archive test reports
+      - name: Archive test reports
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-results
+          path: target/surefire-reports/
