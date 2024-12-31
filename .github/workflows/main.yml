@@ -46,7 +46,9 @@ jobs:
 
       # Step 6: Build and run tests
       - name: Build and run tests
-        run: mvn clean install -Djava.version=21 -Dbrowser=chrome
+  run: mvn clean install -Dbrowser=chrome
+
+
 
       # Step 7: Archive test reports
       - name: Archive test reports
